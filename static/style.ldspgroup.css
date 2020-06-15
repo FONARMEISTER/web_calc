@@ -1,0 +1,300 @@
+/*
+Theme Name: ЛДСП Групп
+Description: Тема оформления для сайта ЛДСП Групп
+Template: storefront
+Text Domain: storefront
+Author: Igor Kalmykov
+Author URI: https://ikalm.ru
+Version: 1.0.1
+See also: http://codex.wordpress.org/Child_Themes
+*/
+
+/*@import url('../storefront/style.css');*/
+
+/* Hide the Mini-cart in the Main manu */
+/*
+#site-header-cart {
+	display: none;
+} */
+
+
+/* Каталог */
+/*
+#post-277 .entry-header, 
+#post-277 .product-categories .cat-item-289:before, 
+#post-277 .product-categories .cat-item-289 > span {
+  display: none;
+}
+
+#post-277 .product-categories .cat-item-289 {
+  font-size: 2.62em;
+}
+#post-277 .product-categories .cat-item-289 a {
+  color: #333333;
+}
+#post-277 .product-categories li ul {
+  font-size: 0.7em;
+}
+#post-277 .product-categories .children a {
+  color: #00c075;
+}
+*/
+
+
+/* Fonts */
+body, button, input, textarea {
+  font-family: 'Ubuntu',sans-serif;
+  font-weight: 300;
+}
+select {
+  font-family: 'Ubuntu',sans-serif;
+}
+
+
+.site-header {
+  padding-top: 1.618em;
+}
+
+/* Search in Header */
+.woocommerce-active .site-header .site-search {
+  width: 40%;
+  float: left;
+  margin-right: 0;
+  clear: none;
+}
+
+.site-search .widget_product_search form input[type=search], 
+.site-search .widget_product_search form input[type=search]::placeholder, 
+.site-search .widget_product_search form input[type=text] {
+  background-color: #424c53;
+  color: #bababa;
+}
+
+.header-contacts {
+  width: 72%;
+  float: left;
+  margin-right: 0;
+  margin-left: 1em;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #bababa;
+  clear: none;
+}
+.header-contacts div {
+  display: inline-block;
+  width: 30px;
+}
+.header-contacts span {
+  white-space: nowrap;
+}
+
+.site-header-cart .cart-contents {
+  padding: 1.618em 2em;
+  background-color: #00a75c; /* #00c075; */
+}
+
+.footer-widgets .widget-title {
+  margin-bottom: 0;
+}
+
+.return-to-shop { display: none; }
+
+.widget_layered_nav_filters, 
+.woocommerce-widget-layered-nav {
+  margin-bottom: 0;
+}
+.widget_layered_nav_filters li, 
+.woocommerce-widget-layered-nav li {
+  display: inline-block;
+  margin-right: 1em;
+}
+.widget_layered_nav_filters .widget-title, 
+.woocommerce-widget-layered-nav .widget-title {
+  border: none;
+}
+
+@media (min-width: 768px) {
+
+  #contacts-block .contacts-data {
+    float: left;
+    width: 30%;
+    margin-bottom: 2em;
+  }
+  #contacts-block .contacts-map {
+    float: left;
+    width: 60%;
+  }
+
+  .site-header .site-branding,
+  .woocommerce-active .site-header .site-branding {
+    width: 16%;
+  }
+/*
+  .storefront-primary-navigation {
+      background-color: rgba(255,255,255, 0.1);
+  }
+*/
+  .site-header-cart .cart-contents {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  .main-navigation ul.menu>li>a, 
+  .main-navigation ul.nav-menu>li>a {
+      padding: 1em 1em;
+      color: white;
+      text-transform: uppercase;
+  }
+  .main-navigation ul.menu>li>a:hover, 
+  .main-navigation ul.nav-menu>li>a:hover {
+      /*background-color: #fad698;*/
+      /*background-color: #c9daea;*/
+      color: #00a75c;
+  }
+  .main-navigation ul.menu>li.current-menu-item>a {
+    color: #bababa;
+  }
+
+  #site-header-cart .cart-contents span, 
+  #site-header-cart .cart-contents:after {
+      color: white;
+  }
+
+  .woocommerce-breadcrumb,
+  .storefront-breadcrumb {
+      margin-bottom: 1em;
+  }
+
+  #post-277 .widget_product_categories {
+    margin: 0 10%;
+  }
+
+  .storefront-full-width-content .woocommerce-products-header, 
+  .storefront-full-width-content.woocommerce-account .entry-header, 
+  .storefront-full-width-content.woocommerce-cart .entry-header, 
+  .storefront-full-width-content.woocommerce-checkout .entry-header {
+      text-align: center;
+      padding: 0 0 1.5em;
+  }
+
+  /*.storefront-full-width-content.single-product .upsells ul.products li.product { */
+  .storefront-full-width-content.single-product .related ul.products li.product {
+      /*width: 30.4347826087%;*/
+      width: 21.7391304348%;
+  }
+
+  .site-footer {
+    padding: 0;
+  }
+  .footer-widgets {
+      padding-top: 2.235801em;
+  }
+
+  .our-advantages-home {
+    margin: 0 -100px 2em -100px;
+  }
+  .our-advantages-home p {
+    margin: 1.5em 0 1.5em 0;
+    font-size: 18px;
+  }
+  .our-advantages-home .woocommerce ul li {
+    width: auto !important; 
+    margin-left: 0;
+    font-size: 16px;
+    margin-bottom: 1em;
+  }
+
+}
+
+/* Наши преимущества */
+#our-advantages .woocommerce ul li {
+  width: 330px;
+  height: 100px;
+  padding: 22px 0 0 100px;
+  margin-left: 20px;
+  text-align: left;
+  font-size: 18px;
+  margin-bottom: 0;
+}
+#our-advantages .woocommerce ul li.first {
+  background: url("/wp-content/uploads/adv-icon1.png") no-repeat;
+}
+#our-advantages .woocommerce ul li.second {
+  background: url("/wp-content/uploads/adv-icon2.png") no-repeat;
+}
+#our-advantages .woocommerce ul li.last {
+  background: url("/wp-content/uploads/adv-icon3.png") no-repeat;
+}
+
+
+/* Footer */
+.site-footer {
+  background-color: #2d383f;
+  color: #ffffff;
+}
+.site-footer .storefront-handheld-footer-bar a:not(.button),
+button.menu-toggle,
+button.menu-toggle:hover {
+  color: #ffffff;
+}
+
+button, input[type="button"], input[type="reset"], input[type="submit"], 
+.button, .added_to_cart, .widget a.button, 
+.button.alt, button.alt, 
+.site-header-cart .widget_shopping_cart a.button {
+  background-color: #00c075;
+  border-color: #00c075;
+  color: #ffffff;
+}
+.button.alt:hover, button.alt:hover {
+  background-color: #00a75c;
+  border-color: #00a75c;
+}
+
+input[type="submit"], 
+.request-pricelist, 
+button, button.alt, .button.alt, 
+ul.products li.product .button {
+    border-radius: 2em;
+}
+
+#nav_menu-2 .current_page_item a,
+#nav_menu-2 current-menu-item a {
+  color: #999;
+}
+
+.storefront-handheld-footer-bar {
+    display: none;
+}
+
+
+button.menu-toggle {
+  float: left;
+} 
+
+@media (max-width: 680px) {
+  .header-contacts {
+    margin-top: 1em;
+  }
+}
+
+
+/* Common Styles */
+.left {
+  float: left;
+  margin: 0 1em 1em 0;
+}
+
+.right {
+  float: right;
+  margin: 0 0 1em 1em;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+}
+
+.hentry .wp-post-image {
+    margin-right: 1em;
+}
