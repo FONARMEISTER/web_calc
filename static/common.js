@@ -1,6 +1,4 @@
 $(document).ready(function(){
-
-
     $('body').on('click','div.input.select li', function(){
         $(this).addClass('selected').siblings().removeClass('selected');
         $(this).parents('div.select').prev().val($(this).data('value')).trigger('change');
@@ -93,15 +91,13 @@ $(document).ready(function(){
 
 
 		
-        // $.post('./',params,function(data){
-        //     $('.results').html(data)
-        //     customize_select()
-        //     $("html:not(:animated),body:not(:animated)").animate({
-        //         scrollTop: $('#map').offset().top
-        //     }, 800);
-        // })
-
-        $.post('./', params)
+        $.post('./',params,function(data){
+            $('.results').html(data)
+            customize_select()
+            $("html:not(:animated),body:not(:animated)").animate({
+                scrollTop: $('#map').offset().top
+            }, 800);
+        })
 
     })
 
@@ -223,6 +219,24 @@ $(document).ready(function(){
         $('.window.angles .content span.type[data-angle="rb"]').parents('div').find('info[data-type="'+a4[0]+'"] input').last().val(a4[2])
     })
 
+
+    $('table.detals').on('click','.paz', function(){
+        $('.window.paz').show().data('row',$(this).parents('tr').index())
+    })
+
+    $('body').on('click',' .window.paz .content .btn', function(){
+        $(this).parents('.window').hide()
+        a=$('#paz')[0].value
+        tr=$('table.detals tbody tr').eq(parseInt($('.window.paz').data('row')))
+        tr.next().next().find('em').html('')
+
+		if (a == "1")
+        	tr.next().next().find('em').append('Паз под заднюю стенку ДВП 4мм')
+		else
+        	tr.next().next().find('em').append('Выборка четверти под заднюю стенку ДВП 4мм.')
+        tr.find('input[name="paz"]').val(a)
+	})
+
     $('body').on('click',' .window.angles .content .btn', function(){
         $(this).parents('.window').hide()
 
@@ -230,7 +244,6 @@ $(document).ready(function(){
         tr.next().find('em').html('')
 
         a1=$('.window.angles .content span.type[data-angle="lt"].selected').data('type')
-
         a1val1=$('.window.angles .content span.type[data-angle="lt"].selected').closest('div').find('.info[data-type="'+a1+'"] input').first().val()
         a1val2=$('.window.angles .content span.type[data-angle="lt"].selected').closest('div').find('.info[data-type="'+a1+'"] input').last().val()
         if(a1=='radius')

@@ -636,18 +636,23 @@ img.emoji {
 				<input type="hidden" name="a2" value="90" />
 				<input type="hidden" name="a3" value="90" />
 				<input type="hidden" name="a4" value="90" />
-				<span class="angles"></span></td>
+				<span class="angles"></span>
+			</td>
 			<td> 
-				<input type="hidden" name="paz" value="1" />
-				<span class="paz"</span>
+				<input type="hidden" name="paz" value="0" />
+				<span class="paz"></span>
 			</td>
 			<td>
-				<input type="hidden" name="prisadka" value="1" />
+				<input type="hidden" name="prisadka" value="0" />
 				<span class="prisadka"</span>
 			</td>
 			<td><span class="del"></span></td>
 		</tr>
-		<tr class="anglesinfo copy">
+		<tr id="angles" class="anglesinfo copy">
+			<td colspan="7"><em></em>
+			</td>
+		</tr>
+		<tr id="pazes" class="anglesinfo copy">
 			<td colspan="7"><em></em>
 			</td>
 		</tr>
@@ -666,6 +671,31 @@ img.emoji {
 	<div class="results">
 	</div>
 
+		<div class="window paz">
+			<div class="content">
+				<div class="body">
+					<p>
+					Если в детали необходимо сделать паз или выбрать четверть под установку задней стенки, укажите соответствующую информацию введением цифры 1 или 2. </p>
+					<p>1-паз под заднюю стенку ДВП 4мм</p>
+					<p> 2 - выборка четверти под заднюю стенку ДВП 4мм.  </p>
+					<div class="center">
+						<div class="ldsp-calc-page">
+							<form name="params" class="params">
+								<label>
+									<select id="paz" name="paz" data-childs="paz">
+										<option value="1">1</option>
+										<option value="2">2</option>
+									</select>
+								</label>
+							</form>
+						</div>
+
+						<span class="cancel">Отменить</span>
+						<span class="btn submit">Применить параметры</span>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<div class="window order">
 			<div class="content">

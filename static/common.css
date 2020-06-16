@@ -12,6 +12,7 @@
 .ldsp-calc-page * {
     margin: 0;
     padding: 0;
+	/* text-align: left; */
     box-sizing: unset !important
 }
 .ldsp-calc-page {
@@ -154,6 +155,7 @@
     font-weight: normal;
     vertical-align: middle;
     position: relative;
+	text-align: left !important;
     border: 1px solid #d0dbe3
 }
 .ldsp-calc-page div.input.select.h59{
@@ -618,6 +620,14 @@
     display: inline-block;
 }
 .ldsp-calc-page .window.angles .content .cancel{
+    display: inline-block;
+    margin: 0 45px;
+    text-transform: uppercase;
+    font-size: 15px;
+    color: #00ad6b;
+    cursor: pointer;
+}
+.ldsp-calc-page .window.paz .content .cancel{
     display: inline-block;
     margin: 0 45px;
     text-transform: uppercase;
