@@ -361,7 +361,21 @@
     display: inline-block;
     width: 40px;
     height: 40px;
-    background: url('../img/icons.png')  -3px -206px;
+    background: url('./icons.png')  -3px -206px;
+    cursor: pointer;
+}
+.ldsp-calc-page table.detals .prisadka{
+    display: inline-block;
+    width: 29px;
+    height: 40px;
+    background: url('./prisadka.png');
+    cursor: pointer;
+}
+.ldsp-calc-page table.detals .paz{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: url('./paz.png');
     cursor: pointer;
 }
 .ldsp-calc-page table.detals .del:hover{
@@ -391,7 +405,7 @@
 .ldsp-calc-page table.detals span.c:hover,
 .ldsp-calc-page table.detals span.c.selected{
     text-shadow: 0 0 0 #000;
-	color: Crimson;
+	color: #00c075;
 }
 
 
