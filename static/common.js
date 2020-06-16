@@ -92,15 +92,17 @@ $(document).ready(function(){
 
 
 
+		
         // $.post('./',params,function(data){
         //     $('.results').html(data)
         //     customize_select()
-
-
         //     $("html:not(:animated),body:not(:animated)").animate({
         //         scrollTop: $('#map').offset().top
         //     }, 800);
         // })
+
+        $.post('./', params)
+
     })
 
 

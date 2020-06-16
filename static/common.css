@@ -390,7 +390,8 @@
 }
 .ldsp-calc-page table.detals span.c:hover,
 .ldsp-calc-page table.detals span.c.selected{
-    text-shadow: 0 0 0 #000
+    text-shadow: 0 0 0 #000;
+	color: Crimson;
 }
 
 

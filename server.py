@@ -24,6 +24,11 @@ def dropdown():
 def icons():
 	return send_from_directory(os.path.join(application.root_path, 'static'), 'icons.png', mimetype='image/png')
 
+@application.route('/', methods = ['POST'])
+def get_post_javascript_data():
+    # jsdata = request.form['params']
+    print(request.form)
+    return "TODO"
 
 
 def main():
