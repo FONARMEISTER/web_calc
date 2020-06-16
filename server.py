@@ -16,6 +16,16 @@ logging.basicConfig(level = logging.DEBUG, format = "> %(asctime)-15s %(levelnam
 def index():
 	return render_template("index.html")
 
+@application.route("/dropdown-arrow-disabled.png")
+def dropdown():
+	return send_from_directory(os.path.join(application.root_path, 'static'), 'dropdown-arrow-disabled.png', mimetype='image/png')
+
+@application.route("/img/icons.png")
+def icons():
+	return send_from_directory(os.path.join(application.root_path, 'static'), 'icons.png', mimetype='image/png')
+
+
+
 def main():
 	application.run(host='0.0.0.0', debug=True, port=80)
 
