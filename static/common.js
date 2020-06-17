@@ -3,7 +3,7 @@ $(document).ready(function(){
         $(this).addClass('selected').siblings().removeClass('selected');
         $(this).parents('div.select').prev().val($(this).data('value')).trigger('change');
         $(this).parents('div.input.select').find('span').first().html($(this).html());
-        //$('select option').prop('disabled', false)
+        // $('select option').prop('disabled', false)
         console.log($(this).html())
 
         $('select option[data-'+$(this).parents('div.select').prev().data('childs')+']').parent().val('').trigger('change')//обнуляем выбор последующих элементов
@@ -50,7 +50,7 @@ $(document).ready(function(){
 
 
     $('body div.input.select li').first().click()
-
+    $('#upload').removeClass('disabled')
 
     $('.adddetal').click(function(){
         $('.emptytable').hide()
@@ -65,7 +65,6 @@ $(document).ready(function(){
         $('.rascroi').removeClass('disabled')
         customize_select()
     })
-
 
     $('.rascroi').click(function(){
         if($(this).hasClass('disabled')) return;
@@ -113,7 +112,6 @@ $(document).ready(function(){
 
         if(!$('table.detals tbody tr:not(.copy)').length) {
             $('.rascroi').addClass('disabled')
-
             $('.emptytable').show()
         }
 
@@ -231,12 +229,12 @@ $(document).ready(function(){
     $('body').on('click',' .window.prisadka .content .btn', function(){
         $(this).parents('.window').hide()
         a=$('#prisadka')[0].value
-        tr=$('table.detals tbody tr').eq(parseInt($('.window.paz').data('row'))).next()
-        tr.next().next().find('em').html('')
+        tr=$('table.detals tbody tr').eq(parseInt($('.window.prisadka').data('row')))
+        tr.next().next().next().find('em').html('')
 		if (a == "1")
-        	tr.next().next().find('em').append('В детали необходимы только простые отверстия (евровинт, сквозные отверстия)')
+        	tr.next().next().next().find('em').append('В детали необходимы только простые отверстия (евровинт, сквозные отверстия)')
 		else
-        	tr.next().next().find('em').append('В детали необходимо хотя бы одно отверстие (сложная присадка)')
+        	tr.next().next().next().find('em').append('В детали необходимо хотя бы одно отверстие (сложная присадка)')
         tr.find('input[name="prisadka"]').val(a)
 	})
 
