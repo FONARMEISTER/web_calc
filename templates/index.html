@@ -656,6 +656,10 @@ img.emoji {
 			<td colspan="7"><em></em>
 			</td>
 		</tr>
+		<tr id="prisadki" class="anglesinfo copy">
+			<td colspan="7"><em></em>
+			</td>
+		</tr>
 		</tbody>
 	</table>
 
@@ -664,7 +668,7 @@ img.emoji {
 	<span class="adddetal btn2">Добавить деталь</span>
 
 		<div class="center">
-	<span class="rascroi btn disabled">Произвести раскрой</span>
+			<span class="rascroi btn disabled">Произвести раскрой</span>
 		</div>
 
 
@@ -674,15 +678,47 @@ img.emoji {
 		<div class="window paz">
 			<div class="content">
 				<div class="body">
+					<div class = "center">
+						<h3> Укажите тип паза(если необходимо) </h3>
+					</div>
 					<p>
 					Если в детали необходимо сделать паз или выбрать четверть под установку задней стенки, укажите соответствующую информацию введением цифры 1 или 2. </p>
-					<p>1-паз под заднюю стенку ДВП 4мм</p>
+					<p> 1 - паз под заднюю стенку ДВП 4мм</p>
 					<p> 2 - выборка четверти под заднюю стенку ДВП 4мм.  </p>
+					<p> Дополнительно для изготовления паза необходимо приложить информацию о конфигурации паза (возможно предоставить позже перед запуском в производство) </p>
 					<div class="center">
 						<div class="ldsp-calc-page">
 							<form name="params" class="params">
 								<label>
 									<select id="paz" name="paz" data-childs="paz">
+										<option value="1">1</option>
+										<option value="2">2</option>
+									</select>
+								</label>
+							</form>
+						</div>
+
+						<span class="cancel">Отменить</span>
+						<span class="btn submit">Применить параметры</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="window prisadka">
+			<div class="content">
+				<div class="body">
+					<div class = "center">
+						<h3> Укажите тип присадки(если необходимо) </h3>
+					</div>
+					<p> Если в детали необходимы только простые отверстия (евровинт, сквозные отверстия), выбирается "тип 1" </p>
+					<p> Если в детали необходимо хотя бы одно отверстие тип 2 (сложная присадка), в столбце Тип отверстий ставится "2" (независимо от наличия отверстий тип 1) </p>
+					<p> Для изготовления присадки необходимо предоставить чертежи детали со схемой присадки (возможно предоставить позже, перед запуском в производство) </p>
+					<div class="center">
+						<div class="ldsp-calc-page">
+							<form name="params" class="params">
+								<label>
+									<select id="prisadka" name="prisadka" data-childs="prisadka">
 										<option value="1">1</option>
 										<option value="2">2</option>
 									</select>

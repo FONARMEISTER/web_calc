@@ -224,12 +224,28 @@ $(document).ready(function(){
         $('.window.paz').show().data('row',$(this).parents('tr').index())
     })
 
+    $('table.detals').on('click','.prisadka', function(){
+        $('.window.prisadka').show().data('row',$(this).parents('tr').index())
+    })
+
+    $('body').on('click',' .window.prisadka .content .btn', function(){
+        $(this).parents('.window').hide()
+        a=$('#prisadka')[0].value
+        tr=$('table.detals tbody tr').eq(parseInt($('.window.paz').data('row'))).next()
+        tr.next().next().find('em').html('')
+		if (a == "1")
+        	tr.next().next().find('em').append('В детали необходимы только простые отверстия (евровинт, сквозные отверстия)')
+		else
+        	tr.next().next().find('em').append('В детали необходимо хотя бы одно отверстие (сложная присадка)')
+        tr.find('input[name="prisadka"]').val(a)
+	})
+
+
     $('body').on('click',' .window.paz .content .btn', function(){
         $(this).parents('.window').hide()
         a=$('#paz')[0].value
         tr=$('table.detals tbody tr').eq(parseInt($('.window.paz').data('row')))
         tr.next().next().find('em').html('')
-
 		if (a == "1")
         	tr.next().next().find('em').append('Паз под заднюю стенку ДВП 4мм')
 		else
