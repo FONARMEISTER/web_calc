@@ -79,8 +79,8 @@ def calc_cost(d):
     material = d['material']
     a = d['details']
     s, p04, p2, paz1, paz2, R, Rless, Rmore, R1, R2 = 0
-    u, v, w, x = [0 for i in range len(a)] 
-    int cnt = -1
+    u, v, w, x = [0 for i in range(len(a))] 
+    cnt = -1
     for i in a:
         cnt += 1
         s += (i['width'] * i['length'] * i['cnt'] / 10 ** 6)
@@ -111,32 +111,32 @@ def calc_cost(d):
         else:
             if (i['r4'] > 0 and i['r3'] > 0):
                 x[cnt] += (i['width'])
-        r = u[cnt]] + v[cnt] + w[cnt] + x[cnt]
+        r = u[cnt] + v[cnt] + w[cnt] + x[cnt]
         R += r * i['cnt'] / 1000
 
         for i in range(1, 5):
             if (inRange(i['r' + str(i)], 1, 249)):
-	        Rless += i['cnt']
+                Rless += i['cnt']
         for i in range(1, 5):
             if (i['r' + str(i)] >= 250):
                 Rmore += i['cnt']
 
-        if ((u[cnt] or v[cnt]) and i['lengthtop'] == 1)
+        if ((u[cnt] or v[cnt]) and i['lengthtop'] == 1):
             R1 += i['length']
-        if ((w[cnt] or x[cnt]) and i['lengthbottom'] == 1)
+        if ((w[cnt] or x[cnt]) and i['lengthbottom'] == 1):
             R1 += i['length']
-        if ((v[cnt] or w[cnt]) and i['wighttop'] == 1)
+        if ((v[cnt] or w[cnt]) and i['wighttop'] == 1):
             R1 += i['width']
-        if ((x[cnt] or u[cnt]) and i['wightbottom'] == 1)
+        if ((x[cnt] or u[cnt]) and i['wightbottom'] == 1):
             R1 += i['wight']
 
-        if ((u[cnt] or v[cnt]) and i['lengthtop'] == 2)
+        if ((u[cnt] or v[cnt]) and i['lengthtop'] == 2):
             R2 += i['length']
-        if ((w[cnt] or x[cnt]) and i['lengthbottom'] == 2)
+        if ((w[cnt] or x[cnt]) and i['lengthbottom'] == 2):
             R2 += i['length']
-        if ((v[cnt] or w[cnt]) and i['wighttop'] == 2)
+        if ((v[cnt] or w[cnt]) and i['wighttop'] == 2):
             R2 += i['width']
-        if ((x[cnt] or u[cnt]) and i['wightbottom'] == 2)
+        if ((x[cnt] or u[cnt]) and i['wightbottom'] == 2):
             R2 += i['wight']
 
     R1 /= 1000
