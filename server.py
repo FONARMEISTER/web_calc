@@ -1,7 +1,7 @@
 #!/usr/bin/python3.7
 # -*- coding: utf-8 -*-
 
-import logging, random, os, openpyxl, sys
+import logging, random, os, openpyxl, sys, math
 from flask import Flask, render_template, request, flash, redirect, send_from_directory
 
 
@@ -34,7 +34,10 @@ def get_post_javascript_data():
     log.info(request.form)
     if (request.form['action'] == 'get_results'):
         sess = random.randint(1, 10**18);
-        return "<h3> Итоговая стоимость заказа: " + calc_cost(parse(request.form)) + "</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
+        d = parse(request.form)
+        if (d == 'Введены не все данные, или данные не корректны'):
+            return d;
+        return "<h3> Итоговая стоимость заказа: " + str(calc_cost(d)) + "</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
     else:
         sess = request.form['uorder']
         return "kek"
@@ -67,7 +70,7 @@ def parse(jsdata):
             d['details'].append({})
             continue
         ind = int(i[7]) // 4 - 1
-        if jsdata[i] == '0' or jsdata[i] == '':
+        if jsdata[i] == '':
             return "Введены не все данные, или данные не корректны"
         if getName(i)[0] == 'a':
             d['details'][ind][getName(i)] = getRadius(jsdata[i])
@@ -78,66 +81,70 @@ def parse(jsdata):
 def calc_cost(d):
     material = d['material']
     a = d['details']
-    s, p04, p2, paz1, paz2, R, Rless, Rmore, R1, R2 = 0
-    u, v, w, x = [0 for i in range(len(a))] 
+    S, p04, p2, paz1, paz2, R, Rless, Rmore, R1, R2 = [0 for i in range(10)]
+    u, v, w, x = [[0 for i in range(len(a))] for i in range(4)]
     cnt = -1
+
+    def inRange(x, a, b):
+        return a <= x and x <= b
+
     for i in a:
         cnt += 1
-        s += (i['width'] * i['length'] * i['cnt'] / 10 ** 6)
-        p04 += (((i['lengthtop'] == 1) + (i['lengthbottom'] == 1)) * i['length'] + ((i['wighttop'] == 1) + (i['wightbottom'] == 1)) * i['wight']) * i['cnt'] / 1000
-        p2 += (((i['lengthtop'] == 2) + (i['lengthbottom'] == 2)) * i['length'] + ((i['wighttop'] == 2) + (i['wightbottom'] == 2)) * i['wight']) * i['cnt'] / 1000
+        S += (i['width'] * i['length'] * i['cnt'] / 10 ** 6)
+        p04 += (((i['lengthtop'] == 1) + (i['lengthbottom'] == 1)) * i['length'] + ((i['widthtop'] == 1) + (i['widthbottom'] == 1)) * i['width']) * i['cnt'] / 1000
+        p2 += (((i['lengthtop'] == 2) + (i['lengthbottom'] == 2)) * i['length'] + ((i['widthtop'] == 2) + (i['widthbottom'] == 2)) * i['width']) * i['cnt'] / 1000
         paz1 += (i['paz'] == 1) * i['cnt']
-        pas2 += (i['paz'] == 2) * i['cnt']
-        if (i['r1'] > 0 and i['r4'] == 0):
+        paz2 += (i['paz'] == 2) * i['cnt']
+        if (i['a1'] > 0 and i['a3'] == 0):
             u[cnt] += (i['length'] + i['width'])
         else:
-            if (i['r1'] > 0 and i['r4'] > 0):
+            if (i['a1'] > 0 and i['a3'] > 0):
                 u[cnt] += (i['length'])
         
-        if (i['r2'] > 0 and i['r1'] == 0):
+        if (i['a2'] > 0 and i['a1'] == 0):
             v[cnt] += (i['length'] + i['width'])
         else:
-            if (i['r2'] > 0 and i['r1'] > 0):
+            if (i['a2'] > 0 and i['a1'] > 0):
                 v[cnt] += (i['width'])
 
-        if (i['r3'] > 0 and i['r2'] == 0):
+        if (i['a4'] > 0 and i['a2'] == 0):
             w[cnt] += (i['length'] + i['width'])
         else:
-            if (i['r3'] > 0 and i['r2'] > 0):
+            if (i['a4'] > 0 and i['a2'] > 0):
                 w[cnt] += (i['length'])
 
-        if (i['r4'] > 0 and i['r3'] == 0):
+        if (i['a3'] > 0 and i['a4'] == 0):
             x[cnt] += (i['length'] + i['width'])
         else:
-            if (i['r4'] > 0 and i['r3'] > 0):
+            if (i['a3'] > 0 and i['a4'] > 0):
                 x[cnt] += (i['width'])
         r = u[cnt] + v[cnt] + w[cnt] + x[cnt]
         R += r * i['cnt'] / 1000
 
-        for i in range(1, 5):
-            if (inRange(i['r' + str(i)], 1, 249)):
+        for j in range(1, 5):
+            if (inRange(int(i['a' + str(j)]), 1, 249)):
                 Rless += i['cnt']
-        for i in range(1, 5):
-            if (i['r' + str(i)] >= 250):
+        for j in range(1, 5):
+            if (int(i['a' + str(j)]) >= 250):
                 Rmore += i['cnt']
 
         if ((u[cnt] or v[cnt]) and i['lengthtop'] == 1):
             R1 += i['length']
         if ((w[cnt] or x[cnt]) and i['lengthbottom'] == 1):
             R1 += i['length']
-        if ((v[cnt] or w[cnt]) and i['wighttop'] == 1):
+        if ((v[cnt] or w[cnt]) and i['widthtop'] == 1):
             R1 += i['width']
-        if ((x[cnt] or u[cnt]) and i['wightbottom'] == 1):
-            R1 += i['wight']
+        if ((x[cnt] or u[cnt]) and i['widthbottom'] == 1):
+            R1 += i['width']
 
         if ((u[cnt] or v[cnt]) and i['lengthtop'] == 2):
             R2 += i['length']
         if ((w[cnt] or x[cnt]) and i['lengthbottom'] == 2):
             R2 += i['length']
-        if ((v[cnt] or w[cnt]) and i['wighttop'] == 2):
+        if ((v[cnt] or w[cnt]) and i['widthtop'] == 2):
             R2 += i['width']
-        if ((x[cnt] or u[cnt]) and i['wightbottom'] == 2):
-            R2 += i['wight']
+        if ((x[cnt] or u[cnt]) and i['widthbottom'] == 2):
+            R2 += i['width']
 
     R1 /= 1000
     R2 /= 1000
@@ -164,7 +171,7 @@ def calc_cost(d):
         res += R1 * 109 + R2 * 296
 
     res += paz1 * 20 + paz2 * 40
-    res += ceil(S / 5) * 120
+    res += math.ceil(S / 5) * 120
     return res
 
 
