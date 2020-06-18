@@ -667,16 +667,18 @@ img.emoji {
 
 	<span class="adddetal btn2">Добавить деталь</span>
 
-		<div class="center">
-			<span class="rascroi btn disabled">Произвести раскрой</span>
-		</div>
-		<div class="center">
-			<span id="upload" class="rascroi btn disabled">Скачать бланк приема заказов на распил и кромление</span>
+		<div id="cost_calc" class="center">
+			<span class="rascroi btn disabled">Рассчитать стоимость</span>
 		</div>
 
 
 	<div class="results">
 	</div>
+		<div class="center">
+			<form action="upload" method="post">
+				<button type="submit" id="upload" class="rascroi btn disabled">Скачать бланк приема заказов на распил и кромление</button>
+			</form>
+		</div>
 
 		<div class="window paz">
 			<div class="content">
@@ -748,16 +750,16 @@ img.emoji {
 						<input type="hidden" name="udelivery" />
 						<input type="hidden" name="uorder" />
 						<input type="text" name="uname" required placeholder="Ваше имя *" />
-						<input type="text" name="ufdsfdsfsd" required placeholder="Электронная почта *" />
+						<input type="text" name="umail" required placeholder="Электронная почта *" />
 						<input type="text" name="uphone" required placeholder="Телефон *" />
 						<textarea name="ucomment" placeholder="Комментарий"></textarea>
 
-						<div class="file">
-							<label>
-								<input type="file" name="ufile" onchange="$(this).next().html($(this).val())" />
-								<span>Прикрепить файл</span>
-							</label>
-						</div>
+						<!-- <div class="file"> -->
+						<!-- 	<label> -->
+						<!-- 		<input type="file" name="ufile" onchange="$(this).next().html($(this).val())" /> -->
+						<!-- 		<span>Прикрепить файл</span> -->
+						<!-- 	</label> -->
+						<!-- </div> -->
 
 						<div>
 							<label class="alignmiddle">

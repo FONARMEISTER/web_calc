@@ -66,7 +66,7 @@ $(document).ready(function(){
         customize_select()
     })
 
-    $('.rascroi').click(function(){
+    $('#cost_calc').click(function(){
         if($(this).hasClass('disabled')) return;
 
 
@@ -93,11 +93,8 @@ $(document).ready(function(){
         $.post('./',params,function(data){
             $('.results').html(data)
             customize_select()
-            $("html:not(:animated),body:not(:animated)").animate({
-                scrollTop: $('#map').offset().top
-            }, 800);
         })
-
+		$('#cost_calc').hide()
     })
 
 
@@ -314,6 +311,7 @@ $(document).ready(function(){
 
 
     $('body').on('submit','form[name="order"]', function(){
+		$('input[name="uorder"]')[0].value = $('.results div')[0].getAttribute('data-order')
         var fd = new FormData($(this)[0]);
 
 

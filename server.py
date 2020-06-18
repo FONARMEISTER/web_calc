@@ -16,6 +16,11 @@ logging.basicConfig(level = logging.DEBUG, format = "> %(asctime)-15s %(levelnam
 def index():
 	return render_template("index.html")
 
+@application.route("/upload", methods = ['POST'])
+def upload():
+	return send_from_directory('static', "blank.xls", as_attachment=True)
+
+
 @application.route("/dropdown-arrow-disabled.png")
 def dropdown():
 	return send_from_directory(os.path.join(application.root_path, 'static'), 'dropdown-arrow-disabled.png', mimetype='image/png')
@@ -28,7 +33,14 @@ def icons():
 def get_post_javascript_data():
     # jsdata = request.form['params']
     print(request.form)
-    return "TODO"
+    if (request.form['action'] == 'get_results'):
+        sess = random.randint(1, 10**18);
+        return "<h3> Итоговая стоимость заказа: " + 'TODO' + "</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
+    else:
+        sess = request.form['uorder']
+        print(sess)
+        return "kek"
+
 
 
 def main():
