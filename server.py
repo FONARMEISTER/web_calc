@@ -25,7 +25,7 @@ def index():
 
 @application.route("/upload", methods = ['POST'])
 def upload():
-	return send_from_directory('static', "blank.xls", as_attachment=True)
+	return send_from_directory('static', "blank.xlsx", as_attachment=True)
 
 
 @application.route("/dropdown-arrow-disabled.png")
@@ -51,9 +51,11 @@ def getPostJavascriptData():
 		return "<h3> Итоговая стоимость заказа: " + cost + " рублей</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
 	else:
 		sess = request.form['uorder']
+		file = os.path.join(ROOT, 'result', sess + '.xlsx')
 		fillPersonalData(request.form, sess)
-		sendEmail(request.form['umail'], sess, os.path.join(ROOT, 'result', sess + '.xlsx'))
-		sendEmail(adminEmail, sess, os.path.join(ROOT, 'result', sess + '.xlsx'), request.form)
+		sendEmail(request.form['umail'], sess, file)
+		sendEmail(adminEmail, sess, file, request.form)
+		os.remove(file)
 		return "success"
 
 def fillOrderData(d, sess, file):
@@ -79,8 +81,8 @@ def fillOrderData(d, sess, file):
 		sheet.cell(row = 47 + i, column = 9).value = a[i]['paz']
 		sheet.cell(row = 47 + i, column = 10).value = a[i]['a1']
 		sheet.cell(row = 47 + i, column = 11).value = a[i]['a2']
-		sheet.cell(row = 47 + i, column = 12).value = a[i]['a3']
-		sheet.cell(row = 47 + i, column = 13).value = a[i]['a4']
+		sheet.cell(row = 47 + i, column = 12).value = a[i]['a4']
+		sheet.cell(row = 47 + i, column = 13).value = a[i]['a3']
 		sheet.cell(row = 47 + i, column = 14).value = a[i]['prisadka']
 	wb.save(os.path.join(ROOT,'result', sess + '.xlsx'))
 	wb.close()
@@ -117,12 +119,15 @@ def parse(jsdata):
 
 	def getRadius(s):
 		ans = ""
+		if s[0] != 'r':
+			return 0
 		for a in s:
 			if ord(a) >= 48 and ord(a) <= 57:
 				ans += a
 			elif len(ans) > 0:
 				return float(ans)
 		return float(ans)
+
 	if jsdata['params[material]'] == '':
 		return "Введены не все данные, или данные не корректны"
 	d = {'material' : getMaterial(jsdata['params[material]']), 'details' : []}
