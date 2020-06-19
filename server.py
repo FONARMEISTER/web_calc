@@ -1,13 +1,20 @@
 #!/usr/bin/python3.7
 # -*- coding: utf-8 -*-
 
-import logging, random, os, openpyxl, sys, math
+import logging, random, os, openpyxl, sys, math, smtplib, sys
 from flask import Flask, render_template, request, flash, redirect, send_from_directory
+from email import encoders
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.utils import formatdate
 
 
 ROOT = os.path.split(os.path.abspath(__file__))[0]
+adminEmail = 'a-horohorin@mail.ru'
 
 application = Flask(__name__)
+orders = dict()
 application.secret_key = "abracadabra"
 log = logging.getLogger(__name__)
 logging.basicConfig(level = logging.DEBUG, format = "> %(asctime)-15s %(levelname)-8s || %(message)s")
@@ -30,16 +37,21 @@ def icons():
 	return send_from_directory(os.path.join(application.root_path, 'static'), 'icons.png', mimetype='image/png')
 
 @application.route('/', methods = ['POST'])
-def get_post_javascript_data():
+def getPostJavascriptData():
     log.info(request.form)
     if (request.form['action'] == 'get_results'):
-        sess = random.randint(1, 10**18);
+        sess = str(random.randint(1, 10**18));
         d = parse(request.form)
         if (d == 'Введены не все данные, или данные не корректны'):
             return d;
-        return "<h3> Итоговая стоимость заказа: " + str(calc_cost(d)) + "</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
+        cost = calcCost(d)
+        cost = str("{0:.2f}".format(cost))
+        orders[sess] = cost
+        return "<h3> Итоговая стоимость заказа: " + cost + " рублей</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
     else:
         sess = request.form['uorder']
+        sendEmail(request.form['umail'], sess, os.path.join(ROOT, 'static', 'blank.xls'))
+        sendEmail(adminEmail, sess, os.path.join(ROOT, 'static', 'blank.xls'), request.form)
         return "kek"
 
 def parse(jsdata):
@@ -78,7 +90,47 @@ def parse(jsdata):
             d['details'][ind][getName(i)] = float(jsdata[i])
     return d
 
-def calc_cost(d):
+def sendEmail(adress, sess, file, form = 0):
+    from_addr = 'andrew.khorokhorin@gmail.com'
+    msg = MIMEMultipart()
+    msg["From"] = from_addr
+    msg["Subject"] = "Заказ на сервисе khaser.cf"
+    msg["Date"] = formatdate(localtime=True)
+
+    if (form != 0):
+        data = '''
+            Поступил новый заказ на сумму: %s
+            Имя: %s
+            Телефон: %s
+            Email: %s
+            Номер заказа: %s
+            Комментарий: %s
+        ''' % (orders[sess], form['uname'], form['uphone'], form['umail'], sess, form['ucomment'])
+        msg.attach(MIMEText(data))
+    else:
+        msg.attach(MIMEText("Ваш заказ " + sess + " отправлен на рассмотрение и подтверждение"))
+
+    msg["To"] = adress
+
+    attachment = MIMEBase('application', "octet-stream")
+
+    with open(file, "rb") as fh:
+        data = fh.read()
+
+    attachment.set_payload( data )
+    encoders.encode_base64(attachment)
+    header = 'Content-Disposition', 'attachment; filename="%s"' % file
+    attachment.add_header(*header)
+    msg.attach(attachment) 
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(from_addr, 'Azod10042003')
+    server.sendmail(from_addr, adress, msg.as_string())
+    server.quit()
+
+
+def calcCost(d):
     material = d['material']
     a = d['details']
     S, p04, p2, paz1, paz2, R, Rless, Rmore, R1, R2 = [0 for i in range(10)]

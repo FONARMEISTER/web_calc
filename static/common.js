@@ -88,13 +88,13 @@ $(document).ready(function(){
         $('.results').html('<div class="center"><img src="https://cdn-images-1.medium.com/max/1600/1*inYwyq37FdvRPLRphTqwBA.gif" alt="" /></div>')
 
 
-
-		
         $.post('./',params,function(data){
             $('.results').html(data)
             customize_select()
+			console.log(data)
+			if (data != 'Введены не все данные, или данные не корректны')
+				$('#cost_calc').hide()
         })
-		$('#cost_calc').hide()
     })
 
 
@@ -314,6 +314,8 @@ $(document).ready(function(){
 		$('input[name="uorder"]')[0].value = $('.results div')[0].getAttribute('data-order')
         var fd = new FormData($(this)[0]);
 
+
+        $('#window-order').html('<div class="center"><img src="https://cdn-images-1.medium.com/max/1600/1*inYwyq37FdvRPLRphTqwBA.gif" alt="" /></div>')
 
         $.ajax({
             url: './',
