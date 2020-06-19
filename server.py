@@ -46,14 +46,54 @@ def getPostJavascriptData():
             return d;
         cost = calcCost(d)
         cost = str("{0:.2f}".format(cost))
-        orders[sess] = cost
+        orders[sess] = cost        
+        fillOrderData(d, sess, os.path.join(ROOT,'static', 'blank.xlsx'))
         return "<h3> Итоговая стоимость заказа: " + cost + " рублей</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
     else:
         sess = request.form['uorder']
-        sendEmail(request.form['umail'], sess, os.path.join(ROOT, 'static', 'blank.xls'))
-        sendEmail(adminEmail, sess, os.path.join(ROOT, 'static', 'blank.xls'), request.form)
-        return "kek"
+        fillPersonalData(request.form, sess)
+        sendEmail(request.form['umail'], sess, os.path.join(ROOT, 'result', sess + '.xlsx'))
+        sendEmail(adminEmail, sess, os.path.join(ROOT, 'result', sess + '.xlsx'), request.form)
+        return "success"
 
+def fillOrderData(d, sess, file):
+    wb = openpyxl.load_workbook(filename = file)
+    wb.save(os.path.join(ROOT, 'result', sess + '.xlsx'))
+    wb.close()
+    wb = openpyxl.load_workbook(filename = os.path.join(ROOT,'result',sess + '.xlsx'))
+    sheet = wb[wb.sheetnames[0]]
+    a = d['details']
+    sheet.cell(row = 30, column = 2).value = d['material']
+    for i in range(len(d['details'])):
+        for j in ['widthtop', 'widthbottom', 'lengthtop', 'lengthbottom']:
+            if a[i][j] == 1:
+                a[i][j] = 0.4
+        sheet.cell(row = 47 + i, column = 1).value = i + 1
+        sheet.cell(row = 47 + i, column = 2).value = a[i]['length']
+        sheet.cell(row = 47 + i, column = 3).value = a[i]['width']
+        sheet.cell(row = 47 + i, column = 4).value = a[i]['cnt']
+        sheet.cell(row = 47 + i, column = 5).value = a[i]['widthtop']
+        sheet.cell(row = 47 + i, column = 6).value = a[i]['widthbottom']
+        sheet.cell(row = 47 + i, column = 7).value = a[i]['lengthtop']
+        sheet.cell(row = 47 + i, column = 8).value = a[i]['lengthbottom']
+        sheet.cell(row = 47 + i, column = 9).value = a[i]['paz']
+        sheet.cell(row = 47 + i, column = 10).value = a[i]['a1']
+        sheet.cell(row = 47 + i, column = 11).value = a[i]['a2']
+        sheet.cell(row = 47 + i, column = 12).value = a[i]['a3']
+        sheet.cell(row = 47 + i, column = 13).value = a[i]['a4']
+        sheet.cell(row = 47 + i, column = 14).value = a[i]['prisadka']
+    wb.save(os.path.join(ROOT,'result', sess + '.xlsx'))
+    wb.close()
+
+def fillPersonalData(d, sess):
+    wb = openpyxl.load_workbook(filename = os.path.join(ROOT,'result',sess + '.xlsx'))
+    sheet = wb[wb.sheetnames[0]]
+    sheet.cell(row = 27, column = 2).value = d['uname']
+    sheet.cell(row = 28, column = 2).value = d['uphone']
+    sheet.cell(row = 31, column = 2).value = "2"
+    wb.save(os.path.join(ROOT, 'result', sess + '.xlsx'))
+    wb.close()
+    
 def parse(jsdata):
     def getMaterial(s):
         if s == 'ЛДСП16':
@@ -64,11 +104,19 @@ def parse(jsdata):
             return 4
 
     def getName(s):
-        name = s[10:-1]
+        cnt = 0
+        ind = 0
+        for i in range(len(s)):
+            if s[i] == '[':
+                cnt += 1
+                if cnt == 2:
+                    ind = i
+                    break
+        name = s[ind + 1:-1]
         return name
 
     def getRadius(s):
-        if s[-1] == '0':
+        if s[-1] != 'd':
             return float(s[-2:])
         else:
             return float(s[0:2])
@@ -119,7 +167,7 @@ def sendEmail(adress, sess, file, form = 0):
 
     attachment.set_payload( data )
     encoders.encode_base64(attachment)
-    header = 'Content-Disposition', 'attachment; filename="%s"' % file
+    header = 'Content-Disposition', 'attachment; filename="order.xlsx"'
     attachment.add_header(*header)
     msg.attach(attachment) 
 
