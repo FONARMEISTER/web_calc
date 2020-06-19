@@ -139,8 +139,8 @@ def parse(jsdata):
 			continue
 		ind = int(i[7]) // 4 - 1
 		if jsdata[i] == '':
-			return "Введены не все данные, или данные не корректны"
-		if getName(i)[0] == 'a':
+			d['details'][ind][getName(i)] = float(0)
+		elif getName(i)[0] == 'a':
 			d['details'][ind][getName(i)] = getRadius(jsdata[i])
 		else:
 			d['details'][ind][getName(i)] = float(jsdata[i])
