@@ -288,7 +288,7 @@ def updateCost(file):
 
 
 def main():
-    updateCost(os.path.join(ROOT, "стоимость.xlsx"))
+    updateCost(os.path.join(ROOT, "cost.xlsx"))
     application.run(host='0.0.0.0', debug=True, port=80)
 
 if __name__ == "__main__":
