@@ -91,13 +91,15 @@ $(document).ready(function(){
 			$('.results').html(data)
 			customize_select()
 			console.log(data)
-			if (data != 'Введены не все данные, или данные не корректны')
+			if (data != '<h3> Не указан материал изделия </h3>')
 				$('#cost_calc').hide()
 		})
 	})
 
 
 	$('table.detals').on('click','.del', function(){
+		$(this).parents('tr').next().next().next().remove()
+		$(this).parents('tr').next().next().remove()
 		$(this).parents('tr').next().remove()
 		$(this).parents('tr').remove()
 

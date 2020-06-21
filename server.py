@@ -12,6 +12,7 @@ from email.utils import formatdate
 
 ROOT = os.path.split(os.path.abspath(__file__))[0]
 adminEmail = 'a-horohorin@mail.ru'
+noMaterial = "<h3> Не указан материал изделия </h3>"
 
 application = Flask(__name__)
 orders = dict()
@@ -42,7 +43,7 @@ def getPostJavascriptData():
     if (request.form['action'] == 'get_results'):
         sess = str(random.randint(1, 10**18));
         d = parse(request.form)
-        if (d == 'Введены не все данные, или данные не корректны'):
+        if (d == noMaterial):
             return d;
         cost = calcCost(d)
         cost = str("{0:.2f}".format(cost))
@@ -129,7 +130,7 @@ def parse(jsdata):
         return float(ans)
 
     if jsdata['params[material]'] == '':
-        return "Введены не все данные, или данные не корректны"
+        return noMaterial
     d = {'material' : getMaterial(jsdata['params[material]']), 'details' : []}
     for i in jsdata:
         if 'detail' not in i:
