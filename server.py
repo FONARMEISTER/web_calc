@@ -16,6 +16,7 @@ noMaterial = "<h3> Не указан материал изделия </h3>"
 
 application = Flask(__name__)
 orders = dict()
+cost = dict()
 application.secret_key = "abracadabra"
 log = logging.getLogger(__name__)
 logging.basicConfig(level = logging.DEBUG, format = "> %(asctime)-15s %(levelname)-8s || %(message)s")
@@ -28,14 +29,6 @@ def index():
 def upload():
     return send_from_directory('static', "blank.xlsx", as_attachment=True)
 
-
-@application.route("/dropdown-arrow-disabled.png")
-def dropdown():
-    return send_from_directory(os.path.join(application.root_path, 'static'), 'dropdown-arrow-disabled.png', mimetype='image/png')
-
-@application.route("/img/icons.png")
-def icons():
-    return send_from_directory(os.path.join(application.root_path, 'static'), 'icons.png', mimetype='image/png')
 
 @application.route('/', methods = ['POST'])
 def getPostJavascriptData():
@@ -260,32 +253,42 @@ def calcCost(d):
 
     res = 0
     if (material == 16):
-        res += S * 370 * 1 + 70 * S
+        res += S * cost['B37'] * cost['B42'] + cost['B32'] * S
     if (material == 26):
-        res += S * 450 * 1 + 90 * S
+        res += S * cost['B38'] * cost['B42'] + cost['B33'] * S
     if (material == 4):
-        res += S * 150 * 1 + 25 * S
+        res += S * cost['B39'] * cost['B42'] + cost['B34'] * S
 
-    res += Rless * 120
-    res += Rmore * 250
-
-    if (material == 16):
-        res += (p04 - R1) * 33 + (p2 - R2) * 66
-    if (material == 26):
-        res += (p04 - R1) * 55 + (p2 - R2) * 150
+    res += Rless * cost['N34']
+    res += Rmore * cost['N35']
 
     if (material == 16):
-        res += R1 * 59 + R2 * 101
+        res += (p04 - R1) * cost['H32'] + (p2 - R2) * cost['H33']
     if (material == 26):
-        res += R1 * 109 + R2 * 296
+        res += (p04 - R1) * cost['K32'] + (p2 - R2) * cost['K33']
 
-    res += paz1 * 20 + paz2 * 40
-    res += math.ceil(S / 5) * 120
+    if (material == 16):
+        res += R1 * cost['H34'] + R2 * cost['H35']
+    if (material == 26):
+        res += R1 * cost['K34'] + R2 * cost['K35']
+
+    res += paz1 * cost['N32'] + paz2 * cost['N33']
+    res += math.ceil(S / 5) * cost['Q33']
     return res
+
+def updateCost(file):
+    wb = openpyxl.load_workbook(filename = file)
+    sheet = wb['форма']
+    for i in range(ord('A'), ord('Z') + 1):
+        for j in range(1, 50):
+            s = chr(i) + str(j)
+            cost[s] = sheet[s].value
+    wb.close()
+
 
 
 def main():
-    application.after_request_funcs = {}
+    updateCost(os.path.join(ROOT, "стоимость.xlsx"))
     application.run(host='0.0.0.0', debug=True, port=80)
 
 if __name__ == "__main__":

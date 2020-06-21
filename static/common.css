@@ -256,7 +256,7 @@
 }
 .ldsp-calc-page div.input.select.disabled:after {
     border-color: #d2dce2 !important;
-    background: url('../../dropdown-arrow-disabled.png') center center no-repeat;
+    background: url('./dropdown-arrow-disabled.png') center center no-repeat;
     cursor: default !important
 }
 .ldsp-calc-page div.input.select.disabled ul{
@@ -290,7 +290,7 @@
     top: 20px;
     width: 25px;
     height: 25px;
-    background: url('../img/icons.png') -236px -126px;
+    background: url('./icons.png') -236px -126px;
     cursor: pointer;
     z-index: 5;
 }
@@ -428,7 +428,7 @@
     width: 30px;
     height: 30px;
     margin-top: -15px;
-    background: url('../img/icons.png') -164px -284px no-repeat;
+    background: url('./icons.png') -164px -284px no-repeat;
 }
 .ldsp-calc-page .results table th{
     padding-bottom: 15px;
@@ -586,7 +586,7 @@
     width: 27px;
     top: -4px;
     height: 27px;
-    background: url('../img/icons.png') -217px -287px
+    background: url('./icons.png') -217px -287px
 }
 .ldsp-calc-page .window.order .content a{
     color: #00c075;
@@ -685,7 +685,7 @@
     width: 114px;
     height: 112px;
     position: absolute;
-    background: url('../img/icons.png') -29px -618px no-repeat;
+    background: url('./icons.png') -29px -618px no-repeat;
 }
 
 .ldsp-calc-page .window.angles .content .lt.radius{
