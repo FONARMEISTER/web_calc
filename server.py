@@ -64,7 +64,7 @@ def fillOrderData(d, sess, file):
         for j in ['widthtop', 'widthbottom', 'lengthtop', 'lengthbottom']:
             if a[i][j] == 1:
                 a[i][j] = 0.4
-        sheet.cell(row = 47 + i, column = 1).value = i + 1
+        sheet.cell(row = 47 + i, column = 1).value = str(i + 1) + "; тип - " + a[i]['type']
         sheet.cell(row = 47 + i, column = 2).value = a[i]['length']
         sheet.cell(row = 47 + i, column = 3).value = a[i]['width']
         sheet.cell(row = 47 + i, column = 4).value = a[i]['cnt']
@@ -124,15 +124,17 @@ def parse(jsdata):
 
     if jsdata['params[material]'] == '':
         return noMaterial
-    d = {'material' : getMaterial(jsdata['params[material]']), 'details' : []}
+    if jsdata['params[pack]'] == '':
+        return noPack
+    d = {'material' : getMaterial(jsdata['params[material]']), 'pack' : float(jsdata['params[pack]']), 'details' : []}
     for i in jsdata:
         if 'detail' not in i:
             continue
+        ind = int(i[7]) // 4 - 1
         if 'type' in i:
             d['details'].append({})
-            continue
-        ind = int(i[7]) // 4 - 1
-        if jsdata[i] == '':
+            d['details'][ind][getName(i)] = str(jsdata[i])
+        elif jsdata[i] == '':
             d['details'][ind][getName(i)] = float(0)
         elif getName(i)[0] == 'a':
             d['details'][ind][getName(i)] = getRadius(jsdata[i])
@@ -183,6 +185,7 @@ def sendEmail(adress, sess, file, form = 0):
 def calcCost(d):
     material = d['material']
     a = d['details']
+    pack = int(d['pack'])
     S, p04, p2, paz1, paz2, R, Rless, Rmore, R1, R2 = [0 for i in range(10)]
     u, v, w, x = [[0 for i in range(len(a))] for i in range(4)]
     cnt = -1
@@ -273,7 +276,12 @@ def calcCost(d):
         res += R1 * cost['K34'] + R2 * cost['K35']
 
     res += paz1 * cost['N32'] + paz2 * cost['N33']
-    res += math.ceil(S / 5) * cost['Q33']
+    if (pack == 1):
+        res += math.ceil(S / 5) * cost['Q32']
+    if (pack == 2):
+        res += math.ceil(S / 5) * cost['Q33']
+    if (pack == 3):
+        res += math.ceil(S / 5) * cost['Q34']
     return res
 
 def updateCost(file):

@@ -316,7 +316,8 @@ $(document).ready(function(){
 	$('body').on('submit','form[name="order"]', function(){
 		$('input[name="uorder"]')[0].value = $('.results div')[0].getAttribute('data-order')
 		var fd = new FormData($(this)[0]);
-		$('.window').hide()
+		$('#window-order').html('<div class="center"><img src="https://cdn-images-1.medium.com/max/1600/1*inYwyq37FdvRPLRphTqwBA.gif" alt="" /></div>')
+        
 		$.ajax({
 			url: './',
 			data: fd,
@@ -324,7 +325,10 @@ $(document).ready(function(){
 			contentType: false,
 			type: 'POST',
 		});
-		alert('Спасибо за заявку! Мы скоро свяжемся с вами');
+        setTimeout(function() {
+		    $('.window').hide()
+		    alert('Спасибо за заявку! Мы скоро свяжемся с вами');
+        }, 500);
 
 		return false;
 	})
