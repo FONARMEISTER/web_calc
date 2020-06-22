@@ -46,7 +46,16 @@ $(document).ready(function(){
 		if(!$(this).find('option').not(':disabled').length) $(this).prop('disabled', true)
 		else  $(this).prop('disabled', false)
 
+        update_changes()
 	})
+
+    update_changes = function() {
+        if ($('#cost_calc')[0].style.display == 'none') {
+            $('#cost_calc').show()
+            $('#cost_calc span').html('Пересчитать стоимость')
+            $('div.results').html('')
+        }
+    }
 
 
 	$('body div.input.select li').first().click()
@@ -64,6 +73,7 @@ $(document).ready(function(){
 
 		$('.rascroi').removeClass('disabled')
 		customize_select()
+        update_changes()
 	})
 
 	$('#cost_calc').click(function(){
@@ -81,7 +91,6 @@ $(document).ready(function(){
 			$(this).find('input, select').each(function(){
 				params['detail'][detail][$(this).attr('name')]=$(this).val()
 			})
-
 		})
 
 		$('.results').html('<div class="center"><img src="https://cdn-images-1.medium.com/max/1600/1*inYwyq37FdvRPLRphTqwBA.gif" alt="" /></div>')
@@ -112,8 +121,7 @@ $(document).ready(function(){
 			$('.rascroi').addClass('disabled')
 			$('.emptytable').show()
 		}
-
-
+        update_changes()
 	})
 
 
@@ -132,10 +140,9 @@ $(document).ready(function(){
 		if(!selected) $(this).addClass('selected')
 	})
 
-	$('body').on('change','select[name="delivery"]', function(){
-		$(this).parents('tr').find('td').last().find('span').first().html($(this).find('option:selected').data('price'))
-		$('.results table .itog span').first().html(parseFloat($('.results table .itog').data('price')) + parseFloat($(this).find('option:selected').data('price')))
-	})
+	$('body').on('change', '.params, tr td input, select.type', update_changes)
+	$('body').on('click', 'td span', update_changes)
+
 
 	$('body').on('change','select[name="material"]', function(){
 		if($(this).val()=='ДВП' || $(this).val()=='ДСП' || $(this).val()=='МДФ'){
@@ -158,6 +165,7 @@ $(document).ready(function(){
 	})
 
 	$('body').on('click','div.input.select',function(e){
+        // update_changes()
 		$('div.input.select').not(this).removeClass('hover');
 		$(this).toggleClass('hover');
 		if($(this).hasClass('hover')){
@@ -236,6 +244,7 @@ $(document).ready(function(){
 		if (a == "2")
 			tr.next().next().next().find('em').append('В детали необходимо хотя бы одно отверстие (сложная присадка)')
 		tr.find('input[name="prisadka"]').val(a)
+        update_changes()
 	})
 
 
@@ -249,6 +258,7 @@ $(document).ready(function(){
 		if (a == "2")
 			tr.next().next().find('em').append('Выборка четверти под заднюю стенку ДВП 4мм.')
 		tr.find('input[name="paz"]').val(a)
+        update_changes()
 	})
 
 	$('body').on('click',' .window.angles .content .btn', function(){
@@ -298,6 +308,7 @@ $(document).ready(function(){
 
 		tr.find('input[name="a4"]').val(a4+'#'+a4val1+'#'+a4val2)
 
+        update_changes()
 	})
 
 

@@ -13,6 +13,7 @@ from email.utils import formatdate
 ROOT = os.path.split(os.path.abspath(__file__))[0]
 adminEmail = 'a-horohorin@mail.ru'
 noMaterial = "<h3> Не указан материал изделия </h3>"
+noPack = "<h3> Не указана упаковка изделия </h3>"
 
 application = Flask(__name__)
 orders = dict()
