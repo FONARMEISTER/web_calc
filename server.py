@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/local/bin/python3.7
 # -*- coding: utf-8 -*-
 
 import logging, random, os, openpyxl, sys, math, smtplib, sys
@@ -61,13 +61,14 @@ def fillOrderData(d, sess, file):
     sheet = wb[wb.sheetnames[0]]
     a = d['details']
     sheet.cell(row = 30, column = 2).value = d['material']
+    sheet.cell(row = 32, column = 2).value = d['dekor']
     for i in range(len(d['details'])):
         for j in ['widthtop', 'widthbottom', 'lengthtop', 'lengthbottom']:
             if a[i][j] == 1:
                 a[i][j] = 0.4
         sheet.cell(row = 47 + i, column = 1).value = str(i + 1) + "; тип - " + a[i]['type']
-        sheet.cell(row = 47 + i, column = 2).value = a[i]['length']
-        sheet.cell(row = 47 + i, column = 3).value = a[i]['width']
+        sheet.cell(row = 47 + i, column = 2).value = a[i]['width']
+        sheet.cell(row = 47 + i, column = 3).value = a[i]['length']
         sheet.cell(row = 47 + i, column = 4).value = a[i]['cnt']
         sheet.cell(row = 47 + i, column = 5).value = a[i]['widthtop']
         sheet.cell(row = 47 + i, column = 6).value = a[i]['widthbottom']
@@ -124,10 +125,10 @@ def parse(jsdata):
         return float(ans)
 
     if jsdata['params[material]'] == '':
-        return noMaterial
+        return 'noMaterial'
     if jsdata['params[pack]'] == '':
-        return noPack
-    d = {'material' : getMaterial(jsdata['params[material]']), 'pack' : float(jsdata['params[pack]']), 'details' : []}
+        return 'noPack'
+    d = {'material' : getMaterial(jsdata['params[material]']), 'pack' : float(jsdata['params[pack]']), 'details' : [], 'dekor' : jsdata['params[dekor]']}
     for i in jsdata:
         if 'detail' not in i:
             continue
@@ -161,7 +162,16 @@ def sendEmail(adress, sess, file, form = 0):
         ''' % (orders[sess], form['uname'], form['uphone'], form['umail'], sess, form['ucomment'])
         msg.attach(MIMEText(data))
     else:
-        msg.attach(MIMEText("Ваш заказ " + sess + " отправлен на рассмотрение и подтверждение"))
+        msg.attach(MIMEText("Ваш заказ " + sess + " отправлен на рассмотрение и подтверждение" + '''
+Внимание данный расчет предварительный на материалы из наличия на нашем складе.
+Обычно сумма, указанная в расчете, совпадает с окончательным расчетом, но в отдельных случаях может отличаться, например в случае нестандартных декоров.
+Для запуска заказа в производство:
+Позвонить/написать +7 927 019 3 019
+Или вайбер/ватсап
+и назвать номер заказа
+            '''))
+
+
 
     msg["To"] = adress
 
@@ -298,7 +308,7 @@ def updateCost(file):
 
 def main():
     updateCost(os.path.join(ROOT, "cost.xlsx"))
-    application.run(host='0.0.0.0', debug=True, port=80)
+    application.run(host='0.0.0.0', port=80)
 
 if __name__ == "__main__":
     main()

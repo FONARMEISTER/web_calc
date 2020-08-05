@@ -407,10 +407,23 @@
 .ldsp-calc-page table.detals span.c:hover,
 .ldsp-calc-page table.detals span.c.selected{
     text-shadow: 0 0 0 #000;
-	color: #00c075;
+    background-color: #00c075;
+    color: #FFFFFF;
+    font-weight: bold
 }
 
-
+#dekor {
+    display: inline-block;
+    line-height: 38px;
+    padding: 0;
+    margin-top: 15px;
+    font-weight: normal;
+    vertical-align: middle;
+    position: relative;
+	text-align: left !important;
+    border: 1px solid #d0dbe3;
+    width: 300px
+}
 
 .ldsp-calc-page .results h3 a[download]{
     position: relative;

@@ -59,22 +59,8 @@ $(document).ready(function(){
 
 
 	$('body div.input.select li').first().click()
-	$('#upload').removeClass('disabled')
 
-	$('.adddetal').click(function(){
-		$('.emptytable').hide()
-
-		$('table.detals tbody').append($('table.detals tr.copy').clone().removeClass('copy'))
-
-		index=0
-		$('table.detals tbody tr').not('.anglesinfo, .copy').each(function(){
-			$(this).find('td').first().html(++index)
-		})
-
-		$('.rascroi').removeClass('disabled')
-		customize_select()
-        update_changes()
-	})
+	$('.adddetal').click(add_detail)
 
 	$('#cost_calc').click(function(){
 		if($(this).hasClass('disabled')) return;
@@ -343,6 +329,7 @@ $(document).ready(function(){
 
 		return false;
 	})
+    add_detail()
 })
 
 
@@ -365,4 +352,20 @@ function customize_select(){
 		div+='</ul></div>';
 		$(this).hide().after(div);
 	});
+}
+
+function add_detail() {
+    $('#upload').removeClass('disabled')
+    $('.emptytable').hide()
+
+    $('table.detals tbody').append($('table.detals tr.copy').clone().removeClass('copy'))
+
+    index=0
+    $('table.detals tbody tr').not('.anglesinfo, .copy').each(function(){
+        $(this).find('td').first().html(++index)
+    })
+
+    $('.rascroi').removeClass('disabled')
+    customize_select()
+    update_changes()
 }
