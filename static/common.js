@@ -364,7 +364,6 @@ function add_detail() {
     $('table.detals tbody tr').not('.anglesinfo, .copy').each(function(){
         $(this).find('td').first().html(++index)
     })
-
     $('.rascroi').removeClass('disabled')
     customize_select()
     update_changes()

@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.7
+#!/usr/bin/python3.7
 # -*- coding: utf-8 -*-
 
 import logging, random, os, openpyxl, sys, math, smtplib, sys
@@ -11,12 +11,13 @@ from email.utils import formatdate
 
 
 ROOT = os.path.split(os.path.abspath(__file__))[0]
-adminEmail = 'a-horohorin@mail.ru'
 noMaterial = "<h3> Не указан материал изделия </h3>"
 noPack = "<h3> Не указана упаковка изделия </h3>"
-
+mailingAdress = 'andrew.khorokhorin@gmail.com'
+mailingPasswd = 'Azod10042003'
+adminEmail = 'a-horohorin@mail.ru'
 application = Flask(__name__)
-orders = dict()
+orderCost = dict()
 cost = dict()
 application.secret_key = "abracadabra"
 log = logging.getLogger(__name__)
@@ -37,11 +38,11 @@ def getPostJavascriptData():
     if (request.form['action'] == 'get_results'):
         sess = str(random.randint(1, 10**18));
         d = parse(request.form)
-        if (d == noMaterial):
+        if (d == noMaterial or d == noPack):
             return d;
         cost = calcCost(d)
         cost = str("{0:.2f}".format(cost))
-        orders[sess] = cost        
+        orderCost[sess] = cost        
         fillOrderData(d, sess, os.path.join(ROOT,'static', 'blank.xlsx'))
         return "<h3> Итоговая стоимость заказа: " + cost + " рублей</h3>" + "<div class='center' data-order='%s'> <span class='btn order'> Oформить заявку </span> </div>" % sess
     else:
@@ -60,8 +61,10 @@ def fillOrderData(d, sess, file):
     wb = openpyxl.load_workbook(filename = os.path.join(ROOT,'result',sess + '.xlsx'))
     sheet = wb[wb.sheetnames[0]]
     a = d['details']
+    sheet.cell(row = 29, column = 2).value = d['dekor']
     sheet.cell(row = 30, column = 2).value = d['material']
-    sheet.cell(row = 32, column = 2).value = d['dekor']
+    sheet.cell(row = 31, column = 2).value = d['pack']
+    sheet.cell(row = 63, column = 2).value = orderCost[sess]
     for i in range(len(d['details'])):
         for j in ['widthtop', 'widthbottom', 'lengthtop', 'lengthbottom']:
             if a[i][j] == 1:
@@ -84,11 +87,12 @@ def fillOrderData(d, sess, file):
     wb.close()
 
 def fillPersonalData(d, sess):
-    wb = openpyxl.load_workbook(filename = os.path.join(ROOT,'result',sess + '.xlsx'))
+    wb = openpyxl.load_workbook(filename = os.path.join(ROOT, 'result', sess + '.xlsx'))
     sheet = wb[wb.sheetnames[0]]
+    sheet.cell(row = 26, column = 2).value = sess
     sheet.cell(row = 27, column = 2).value = d['uname']
     sheet.cell(row = 28, column = 2).value = d['uphone']
-    sheet.cell(row = 31, column = 2).value = "2"
+    sheet.cell(row = 32, column = 2).value = d['ucomment']
     wb.save(os.path.join(ROOT, 'result', sess + '.xlsx'))
     wb.close()
     
@@ -125,9 +129,9 @@ def parse(jsdata):
         return float(ans)
 
     if jsdata['params[material]'] == '':
-        return 'noMaterial'
+        return noMaterial
     if jsdata['params[pack]'] == '':
-        return 'noPack'
+        return noPack
     d = {'material' : getMaterial(jsdata['params[material]']), 'pack' : float(jsdata['params[pack]']), 'details' : [], 'dekor' : jsdata['params[dekor]']}
     for i in jsdata:
         if 'detail' not in i:
@@ -145,9 +149,8 @@ def parse(jsdata):
     return d
 
 def sendEmail(adress, sess, file, form = 0):
-    from_addr = 'andrew.khorokhorin@gmail.com'
     msg = MIMEMultipart()
-    msg["From"] = from_addr
+    msg["From"] = mailingAdress
     msg["Subject"] = "Заказ на сервисе khaser.cf"
     msg["Date"] = formatdate(localtime=True)
 
@@ -159,17 +162,21 @@ def sendEmail(adress, sess, file, form = 0):
             Email: %s
             Номер заказа: %s
             Комментарий: %s
-        ''' % (orders[sess], form['uname'], form['uphone'], form['umail'], sess, form['ucomment'])
+        ''' % (orderCost[sess], form['uname'], form['uphone'], form['umail'], sess, form['ucomment'])
         msg.attach(MIMEText(data))
     else:
-        msg.attach(MIMEText("Ваш заказ " + sess + " отправлен на рассмотрение и подтверждение" + '''
-Внимание данный расчет предварительный на материалы из наличия на нашем складе.
-Обычно сумма, указанная в расчете, совпадает с окончательным расчетом, но в отдельных случаях может отличаться, например в случае нестандартных декоров.
-Для запуска заказа в производство:
-Позвонить/написать +7 927 019 3 019
-Или вайбер/ватсап
-и назвать номер заказа
-            '''))
+        msg.attach(MIMEText(
+            '''
+            Ваш заказ %s отправлен на рассмотрение и подтверждение.
+            Стоимость заказа составит %s Руб.
+            Внимание данный расчет предварительный на материалы из наличия на нашем складе.
+            Обычно сумма, указанная в расчете, совпадает с окончательным расчетом, но в отдельных случаях может отличаться, например в случае нестандартных декоров.
+            В ближайшее рабочее время наш менеджер свяжется с Вами по указанному в заявке телефону для согласования окончательной стоимости заказа и сроков исполнения
+            По всем вопросам можете связаться с нами по телефону +7 927 019 3 019
+            Или написать вайбер/ватсап +7 927 019 3 019
+            и назвать номер заказа
+            ''' % (sess, orderCost[sess])
+        ))
 
 
 
@@ -188,8 +195,8 @@ def sendEmail(adress, sess, file, form = 0):
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login(from_addr, 'Azod10042003')
-    server.sendmail(from_addr, adress, msg.as_string())
+    server.login(mailingAdress, mailingPasswd)
+    server.sendmail(mailingAdress, adress, msg.as_string())
     server.quit()
 
 
@@ -308,7 +315,7 @@ def updateCost(file):
 
 def main():
     updateCost(os.path.join(ROOT, "cost.xlsx"))
-    application.run(host='0.0.0.0', port=80)
+    application.run(host='0.0.0.0', port=80, debug=True)
 
 if __name__ == "__main__":
     main()
